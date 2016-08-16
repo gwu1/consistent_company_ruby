@@ -70,7 +70,7 @@ class ConsistentCompanyRuby
       if res.start_with?('A ') &&
           !res[2..res.size].start_with?('&') &&
           !res[3..res.size].start_with?(' ') &&
-          res.index('PLUS') != res.size + 2
+          !res[2..res.size].start_with?('PLUS')
        res.gsub! 'A ', ''
       end
 
