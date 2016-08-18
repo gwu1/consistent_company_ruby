@@ -1,6 +1,60 @@
 class ConsistentCompanyRuby
   def self.namer company
-    puts company
+    return company if company == ''
+
+    in_string = company.dup
+
+    # while processing we turn & = AND, + = PLUS
+    # and we add space at front and back
+    in_string.gsub('&',' & ')
+    in_string.gsub('+',' + ')
+
+    in_string = in_string.upcase
+    in_string.strip!
+    in_string.gsub(/\(|\)/,' ')
+
+    return_string = nil
+    (0..in_string.size-1).each do |i|
+      ch = in_string[i]
+      asc = ch.ord
+
+      if (asc >= 65 && asc <= 90) ||
+          (asc >= 48 && asc <= 57) ||
+          asc > 128 # A-Z, 0-9, and high order chars
+        return_string = "#{return_string}#{ch}"
+      elsif asc == 39 # '
+        # not keeping it
+      elsif asc == 38 && return_string.size > 0 # &
+        if return_string[return_string.size-1] != ' '
+          return_string = "#{return_string} AND "
+        else
+          return_string = "#{return_string}AND "
+        end
+      elsif asc == 43 # +
+        if return_string == 'A' || return_string == 'A '
+          return_string = 'A PLUS '
+        elsif return_string.size > 0
+          if return_string[return_string.size-1] != ' '
+            return_string = "#{return_string} AND "
+          else
+            return_string = "#{return_string}AND "
+          end
+        end
+      elsif return_string.size > 0 &&
+             return_string[return_string.size-1] != ' '
+        return_string = "#{return_string} "
+      end
+      #puts "#{i}#{ch}#{asc}:#{return_string}"
+    end
+
+    return_string.gsub!(' AND ', ' & ')
+    return_string.gsub!('AND', ' & ')
+
+    return_string.strip!
+    return_string = transform_company return_string
+    return_string.strip!
+    return_string.gsub!(' ','')
+    return_string
   end
 
   def self.transform_company res
@@ -58,7 +112,7 @@ class ConsistentCompanyRuby
     res.gsub! " MKTG ", " MKT "
     res.gsub! " MANAGEMENT ", " MGT "
     res.gsub! " MGMT ", " MGT "
-    
+
     res.strip!
     space_loc = res.index ' '
 
@@ -87,7 +141,7 @@ class ConsistentCompanyRuby
     res
   end
 
-  def is_company_word in_word
+  def self.is_company_word in_word
     if ["ADV","ADVERTISING","AGCY","AGENCY","AGY","ASC","ASS","ASSN","ASSOC","ASSOCIAT","ASSOCIATES","ASSOCIATION","ATTORNEY","ATTRNY","ATTY","ATY","AUTO","CO","COMP","COMPANIES","COMPANY","CORP","CORPORATION","CT","CONTRA","DEPARTMENT","DEPT","DIR","DIRECT","DIV","DIVISION","GROUP","HOLDINGS","INC","INCORPORATED","INT","LIMITED","LLC","LLP","LOCAL","LTD","PC","PLC","PROD","PRODS","PRODUCT","PRODUCTIONS","PRODUCTS","TR","TRADE"].include?(in_word)
       true
     else
