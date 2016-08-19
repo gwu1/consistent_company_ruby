@@ -1,6 +1,6 @@
 # consistent_company_ruby
 
-A native Ruby implementation of a Ruby gem 'consistent_company' that is a Ruby C Extension.
+A native Ruby implementation of a Ruby gem 'consistent_company' that is a Ruby C Extension. It takes a Company Name string and replaces it with a normalized compressed version. The replaced name is not for human consumption, but for comparing other similar names to find matches.
 
 ## Install:
 
