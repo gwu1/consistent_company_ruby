@@ -20,5 +20,5 @@ A namer method is added to the string class.
 
 # Copyright
 
-See LICENSE.txt for further details.
+See [LICENSE](https://github.com/gwu1/consistent_company_ruby/blob/b02b8733359745c7ecab663ba22877d038b5987a/LICENSE) for further details.
 
